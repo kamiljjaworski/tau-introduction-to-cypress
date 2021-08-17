@@ -1,3 +1,4 @@
 {
+    "baseUrl": "https://todomvc-app-for-testing.surge.sh",
     "watchForFileChanges": false
 }

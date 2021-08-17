@@ -12,7 +12,7 @@ The code is the result of my practice related to the course.
 - npm run cypress - to get cypress test runner opened
 
 # Commits
-The commit list reflects exact course chapters.
+The commit list reflects exact curse chapters.
 
 # Common CLI commands
 - git init
