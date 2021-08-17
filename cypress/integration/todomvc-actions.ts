@@ -1,22 +1,34 @@
 /// <reference types="cypress"/>
 
-it('open app', () => {
-    cy.visit('/');
-})
+import { TodoPage } from "../page-objects/todoPage";
 
-it('interact with element', () => {
-    cy.visit('/');
-    cy.get('.new-todo', { timeout: 4000 }).type('Learn Cypress' + '{enter}')
-})
+describe('actions', () => {
+    const todoPage = new TodoPage();
 
-it('add item to todo list', () => {
-    const item: string = 'Learn Cypress';
-    cy.visit('/');
-    cy.get('.new-todo').type(item + '{enter}');
-    cy.get('label').should('have.text', item);
-    cy.get('.toggle').should('not.be.checked');
-    cy.get('.toggle').click();
-    cy.get('label').should('have.css', 'text-decoration-line', 'line-through')
-    cy.contains('Clear').click();
-    cy.get('.todo-list').should('not.have.descendants', 'li');
-})
+    beforeEach(() => {
+        todoPage.navigate();
+    })
+
+    it('open app', () => {
+    })
+
+    it('interact with element', () => {
+        todoPage.addTodo('Learn Cypress');
+    })
+
+    it('add item to todo list', () => {
+        const item1: string = 'Learn Cypress';
+        const item2: string = 'Use Cypress';
+        todoPage.addTodo(item1)
+        todoPage.addTodo(item2)
+        todoPage.validateTodoText(2, item1);
+        todoPage.validateTodoText(1, item2);
+        todoPage.validateItemIsChecked(1, false);
+        todoPage.validateItemIsChecked(2, false);
+        todoPage.toogleTodoByIndex(2);
+        todoPage.validateItemGotLineThrough(2);
+        todoPage.toogleTodoByIndex(1);
+        todoPage.clearCompleted();
+        todoPage.validateListIsEmpty();
+    })
+});

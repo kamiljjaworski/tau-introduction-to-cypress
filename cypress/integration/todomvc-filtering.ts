@@ -1,36 +1,39 @@
 /// <reference types="cypress"/>
 
-describe('filtering', () => {
-    beforeEach(() => {
-        cy.visit('/');
-        cy.get('.new-todo').type('Clean the bed{enter}');
-        cy.get('.new-todo').type('Learn Cypress{enter}');
-        cy.get('.new-todo').type('Use Cypress{enter}');
-        cy.get(':nth-child(3) > .view > .toggle').click();
+import { TodoPage } from "../page-objects/todoPage";
 
+describe('filtering', () => {
+    const todoPage = new TodoPage();
+    beforeEach(() => {
+        todoPage.navigate();
+        todoPage.addTodo('Clean the bed');
+        todoPage.addTodo('Learn Cypress');
+        todoPage.addTodo('Use Cypress');
+        todoPage.addTodo('Clean the bed');
+        todoPage.toogleTodoByIndex(3);
     })
 
     it('filter "All"', () => {
-        cy.contains('All').click();
-        cy.get('.todo-list li').should('have.length', 3);
-        cy.contains('All').should('have.class', 'selected')
-        cy.contains('Active').should('have.not.class', 'selected')
-        cy.contains('Completed').should('have.not.class', 'selected')
+        todoPage.showAll();
+        todoPage.validateListLength(4);
+        todoPage.validateFilterButtontnIsSelected('All', true);
+        todoPage.validateFilterButtontnIsSelected('Active', false);
+        todoPage.validateFilterButtontnIsSelected('Completed', false)
     });
 
     it('filter "Active"', () => {
-        cy.contains('Active').click();
-        cy.get('.todo-list li').should('have.length', 2);
-        cy.contains('All').should('have.not.class', 'selected')
-        cy.contains('Active').should('have.class', 'selected')
-        cy.contains('Completed').should('have.not.class', 'selected')
+        todoPage.showOnlyActive();
+        todoPage.validateListLength(3);
+        todoPage.validateFilterButtontnIsSelected('All', false);
+        todoPage.validateFilterButtontnIsSelected('Active', true);
+        todoPage.validateFilterButtontnIsSelected('Completed', false)
     });
 
     it('filter "Completed"', () => {
-        cy.contains('Completed').click();
-        cy.get('.todo-list li').should('have.length', 1);
-        cy.contains('All').should('have.not.class', 'selected')
-        cy.contains('Active').should('have.not.class', 'selected')
-        cy.contains('Completed').should('have.class', 'selected')
+        todoPage.showOnlyCompleted();
+        todoPage.validateListLength(1);
+        todoPage.validateFilterButtontnIsSelected('All', false);
+        todoPage.validateFilterButtontnIsSelected('Active', false);
+        todoPage.validateFilterButtontnIsSelected('Completed', true)
     });
 })
